@@ -1,5 +1,14 @@
-#define fSampling = 44100;
-#define tSampling = 0.00002267573;
+#ifndef fSampling
+    #define fSampling = 44100;
+#endif
+
+#ifndef tSampling
+    #define tSampling = 0.00002267573;
+#endif
+
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
 
 #ifndef WAVE_H
 #define WAVE_H
@@ -16,7 +25,6 @@ class wave
         double phase;
         double duration;
         std::string type;
-        //TODO: make values private & accessible w a function
 
     public:
     //Constructors
@@ -25,6 +33,7 @@ class wave
              double phase_in, double duration_in, std::string type_in);
         ~wave();
      //TEMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     //TODO: make values private & accessible w a function
         double* values;
     //Set private values
         void setFrequency(double frequency);

@@ -8,7 +8,6 @@ wave::wave(){
 }
 wave::wave(double amplitude_in, double frequency_in,
            double phase_in, double duration_in, std::string type_in){
-    std::cout << "entered constructor" << std::endl;
     amplitude = amplitude_in;
     frequency = frequency_in;
     phase = phase_in;
@@ -16,14 +15,11 @@ wave::wave(double amplitude_in, double frequency_in,
     type = type_in;
     values = NULL;
 
-    std::cout << "pre generate" << std::endl;
     generate();
-    std::cout << "post generate" << std::endl;
 }
 
 wave::~wave(){
-    //TODO: verify that this is all that is needed
-    delete[] values;
+    if(values != NULL) delete[] values;
 }
 
 //Setters
@@ -49,18 +45,14 @@ void wave::setType(std::string type_in){
 //Generators
 void wave::generate(){
     //Clear previous values
-    std::cout << "before values clearing" << std::endl;
     if(values != NULL) delete[] values;
-    std::cout << "skipped deletion" << std::endl;
 
     //TODO: fix #define so this can use fSampling
     double size = duration * 44100;
     values = new double[size];
-    std::cout << "allocated space" << std::endl;
 
     //Generate based on wave type
     if(type == "sin"){
-        std::cout << "generating sin" << std::endl;
         generateSin(size);
     }
     else if (type == "square"){
@@ -75,27 +67,24 @@ void wave::generate(){
 }
 
 void wave::generateSin(double size){
-    std::cout << "entered generate sin" << std::endl;
     for(int i = 0; i < size; i++){
-        //TODO: M_PI is not working here for some reason idk
-        values[i] = amplitude*sin((2*3.141592653589793238462643383279502884
-                                   *frequency*0.00002267573*i) + phase);
-        std::cout << values[i] << std::endl;
+        //TODO: tSampling is not working here for some reason idk
+        values[i] = amplitude*sin((2*M_PI*frequency*0.00002267573*i) + phase);
     }
 }
 
 void wave::generateSquare(double size){
     for(int i = 0; i < size; i++){
-        //TODO: M_PI is not working here for some reason idk
-        double temp = sin((2*3.141592653589793238462643383279502884
-                                   *frequency*0.00002267573*i) + phase);
+        //TODO: tSampling is not working here for some reason idk
+        double temp = sin((2*M_PI*frequency*0.00002267573*i) + phase);
         temp > 0 ? values[i] = amplitude : values[i] = amplitude *-1;
     }
 }
 
-//TODO: generate sawtooth wave
 void wave::generateSawtooth(double size){
+    double n = 44100/frequency;
     for(int i = 0; i < size; i++){
-        values[i] = 0.1;
+        values[i] = 2*((amplitude*(fmod(i + n*(phase/(2*M_PI)),n)))/n
+                       - 0.5*amplitude);
     }
 }
