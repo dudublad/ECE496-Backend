@@ -37,9 +37,7 @@ public:
     // set playback time for stream
     void setStreamTime(double time);
 
-    // adjust current volume
-    void setVolume(float volume);
-    float getVolume();
+    ~AudioConfig();
 
 private:
      //RtAudio API variables

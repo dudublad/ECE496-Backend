@@ -26,7 +26,12 @@ void AudioConfig::closeStream(){
 }
 
 void AudioConfig::startStream(){
-    this->dac.startStream();
+    try {
+        this->dac.startStream();
+    }  catch (RtAudioError e) {
+        e.printMessage();
+    }
+
 }
 
 void AudioConfig::pauseStream(){
@@ -41,4 +46,8 @@ void AudioConfig::setStreamTime(double time){
         this->dac.startStream();
     }
     this->dac.stopStream();
+}
+
+AudioConfig::~AudioConfig(){
+    this->dac.closeStream();
 }

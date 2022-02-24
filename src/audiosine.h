@@ -2,11 +2,8 @@
 #define AUDIOSINE_H
 
 #include "SineWave.h"
-#include "RtAudio.h"
-#include "audioconfig.h"
 #include "FileWvOut.h"
 #include "audiofile.h"
-#include "FileLoop.h"
 
 class audioSine: public AudioFile
 {
@@ -24,6 +21,8 @@ public:
     // set the file path of location of generated file
     void setFilePath(QString filePath);
 
+    QString getFilePath();
+
     // generate the sine.wav file
     void generateSine();
 
@@ -31,7 +30,7 @@ private:
     stk::SineWave sineWave;
     std::string filePath;
     stk::FileWvOut output;
-    float durationSecs = 0.1;
+    float durationSecs = 0.1F;
 
     static int id;
     const int currentId;

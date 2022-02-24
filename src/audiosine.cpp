@@ -1,5 +1,7 @@
 #include "audiosine.h"
 
+int audioSine::id = 0;
+
 audioSine::audioSine() : currentId(++id)
 {
 }
@@ -14,6 +16,10 @@ void audioSine::setDuration(float len){
 
 void audioSine::setFilePath(QString filePath){
     this->filePath = filePath.toStdString() + std::to_string(this->currentId);
+}
+
+QString audioSine::getFilePath(){
+    return QString::fromStdString(this->filePath);
 }
 
 void audioSine::generateSine(){
