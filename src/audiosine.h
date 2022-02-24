@@ -2,32 +2,39 @@
 #define AUDIOSINE_H
 
 #include "SineWave.h"
-#include "QString"
-#include "stdio.h"
 #include "RtAudio.h"
 #include "audioconfig.h"
 #include "FileWvOut.h"
+#include "audiofile.h"
+#include "FileLoop.h"
 
-int tickSine( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-         double streamTime, RtAudioStreamStatus status, void *dataPointer );
-
-class audioSine
+class audioSine: public AudioFile
 {
 public:
+
+    // assigns an id to object
     audioSine();
-    audioSine(float durationSecs, QString filePath, unsigned int freq);
+
+    // change sine frequency (aka pitch)
     void setFrequency(float freq);
+
+    // change length of sine wave file generation
+    void setDuration(float len);
+
+    // set the file path of location of generated file
     void setFilePath(QString filePath);
-    void playSine();
+
+    // generate the sine.wav file
     void generateSine();
 
 private:
-    unsigned int sineWaveFrequency = 400;
     stk::SineWave sineWave;
-    unsigned int bufferFrames = stk::RT_BUFFER_SIZE;
     std::string filePath;
     stk::FileWvOut output;
     float durationSecs = 0.1;
+
+    static int id;
+    const int currentId;
 };
 
 #endif // AUDIOSINE_H
