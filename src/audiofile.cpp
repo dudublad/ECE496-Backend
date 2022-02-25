@@ -2,58 +2,31 @@
 
 AudioFile::AudioFile()
 {
-    this->input = stk::FileWvIn();
 }
 
-AudioFile::AudioFile(QString filePath){
-    this->input = stk::FileWvIn();
-    this->filePath = filePath.toStdString();
-
+void AudioFile::openFile(QString filePath){
     try{
-        this->input.openFile(this->filePath);
+        this->input.openFile(filePath.toStdString());
     } catch (stk::StkError &error) {
         error.printMessage();
     }
 
-    this->rate = this->input.getFileRate() / stk::Stk::sampleRate();
-    this->input.setRate(this->rate);
-}
-
-void AudioFile::PlayAudioFile(){
-    audio.closeStream();
+    this->input.setRate((double) (this->input.getFileRate() / stk::Stk::sampleRate()));
 
     try {
-        this->input.openFile(this->filePath);
-    }  catch (stk::StkError &error) {
-        error.printMessage();
-    }
-
-    try {
-        audio.dac.openStream(audio.getStreamParams(), NULL, audio.getAudioFormat(),
+        this->dac.openStream(this->getStreamParams(), NULL, this->getAudioFormat(),
                              (unsigned int) stk::Stk::sampleRate(), &this->bufferFrames, &tickFile, (void*)&this->input);
     }  catch (RtAudioError &error) {
         error.printMessage();
     }
-
-    audio.startStream();
 }
 
-bool AudioFile::isInputOpen(){
-    return this->input.isOpen();
-}
-
-void AudioFile::closeFile(){
-    if (this->isInputOpen()){
-        this->input.closeFile();
-    }
-}
-
-unsigned int AudioFile::getBufferFrames(){
-    return this->bufferFrames;
+void AudioFile::changeVolume(float volume){
+    this->input.normalize(volume);
 }
 
 AudioFile::~AudioFile(){
-    this->closeFile();
+    this->input.closeFile();
 }
 
 int tickFile( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
@@ -70,4 +43,3 @@ int tickFile( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
     }
     return 0;
 }
-

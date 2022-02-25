@@ -5,8 +5,14 @@ AudioConfig::AudioConfig()
     this->streamParameters.deviceId = this->dac.getDefaultInputDevice();
     this->streamParameters.nChannels = 1;
     this->audioFormat = (sizeof(stk::StkFloat) == 8) ? RTAUDIO_FLOAT64 : RTAUDIO_FLOAT32;
+}
 
-    stk::Stk::setSampleRate(this->stkFrequency);
+RtAudio::StreamParameters* AudioConfig::getStreamParams(){
+    return &this->streamParameters;
+}
+
+RtAudioFormat AudioConfig::getAudioFormat(){
+    return this->audioFormat;
 }
 
 bool AudioConfig::isPlaying(){
@@ -20,15 +26,28 @@ void AudioConfig::closeStream(){
 }
 
 void AudioConfig::startStream(){
-    this->dac.startStream();
+    try {
+        this->dac.startStream();
+    }  catch (RtAudioError e) {
+        e.printMessage();
+    }
+
 }
 
-RtAudio::StreamParameters* AudioConfig::getStreamParams(){
-    return &this->streamParameters;
+void AudioConfig::pauseStream(){
+    if (this->isPlaying()){
+        this->dac.stopStream();
+    }
 }
 
-RtAudioFormat AudioConfig::getAudioFormat(){
-    return this->audioFormat;
+void AudioConfig::setStreamTime(double time){
+    this->dac.setStreamTime(time);
+    if (this->isPlaying()){
+        this->dac.startStream();
+    }
+    this->dac.stopStream();
 }
 
-AudioConfig audio;
+AudioConfig::~AudioConfig(){
+    this->dac.closeStream();
+}

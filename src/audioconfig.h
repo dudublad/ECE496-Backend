@@ -3,28 +3,47 @@
 
 #include <RtAudio.h>
 #include <Stk.h>
-#include <FileWvIn.h>
-#include "SineWave.h"
 
+// parent class dealing with streams + volume. main sound config
 class AudioConfig
+
 {
 public:
+    // default contructor
     AudioConfig();
-    bool isPlaying();
-    void closeStream();
-    void startStream();
+
+    // where sound is played
+    RtAudio dac; // digital to analogue converter
+
+    // obtains the necessary device outputs for RT audio
     RtAudio::StreamParameters* getStreamParams();
     RtAudioFormat getAudioFormat();
-    RtAudio dac; // digital to analogue converter
+
+    // determines if current instance of RT audio stream is playing
+    bool isPlaying();
+
+    // closes the stream
+    void closeStream();
+
+    // begins/resumes the stream
+    void startStream();
+
+    // pauses the stream
+    void pauseStream();
+
+    // gets the current time of stream
+    double getStreamTime();
+
+    // set playback time for stream
+    void setStreamTime(double time);
+
+    ~AudioConfig();
 
 private:
      //RtAudio API variables
     RtAudio::StreamParameters streamParameters;
     RtAudioFormat audioFormat;
 
-    const float stkFrequency = 44100.0;
 };
-
-extern AudioConfig audio;
 
 #endif // AUDIOCONFIG_H
