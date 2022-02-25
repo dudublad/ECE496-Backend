@@ -15,17 +15,22 @@ void audioSine::setDuration(float len){
 }
 
 void audioSine::setFilePath(QString filePath){
-    this->filePath = filePath.toStdString() + std::to_string(this->currentId);
+    QStringList dotSplit = filePath.split(QLatin1Char('.'));
+    this->filePath = "";
+    for (int i = 0; i < dotSplit.length() - 1; i++){
+        this->filePath = this->filePath + dotSplit[i];
+    }
+    this->filePath = this->filePath + QString::number(this->currentId) + dotSplit[dotSplit.length() - 1];
 }
 
 QString audioSine::getFilePath(){
-    return QString::fromStdString(this->filePath);
+    return this->filePath;
 }
 
 void audioSine::generateSine(){
     const int numSamples = this->durationSecs * stk::Stk::sampleRate();
 
-    this->output.openFile(this->filePath, 1, stk::FileWrite::FILE_WAV, stk::Stk::STK_SINT16);
+    this->output.openFile(this->filePath.toStdString(), 1, stk::FileWrite::FILE_WAV, stk::Stk::STK_SINT16);
 
     this->sineWave.reset();
 

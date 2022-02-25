@@ -4,6 +4,7 @@
 #include "SineWave.h"
 #include "FileWvOut.h"
 #include "audiofile.h"
+#include "QStringList"
 
 class audioSine: public AudioFile
 {
@@ -28,7 +29,7 @@ public:
 
 private:
     stk::SineWave sineWave;
-    std::string filePath;
+    QString filePath;
     stk::FileWvOut output;
     float durationSecs = 0.1F;
 
