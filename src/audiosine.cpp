@@ -20,7 +20,7 @@ void audioSine::setFilePath(QString filePath){
     for (int i = 0; i < dotSplit.length() - 1; i++){
         this->filePath = this->filePath + dotSplit[i];
     }
-    this->filePath = this->filePath + QString::number(this->currentId) + dotSplit[dotSplit.length() - 1];
+    this->filePath = this->filePath + "_" + QString::number(this->currentId) + "." + dotSplit[dotSplit.length() - 1];
 }
 
 QString audioSine::getFilePath(){
