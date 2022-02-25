@@ -24,6 +24,7 @@ class wave
         double amplitude;
         double phase;
         double duration;
+        //int size;
         std::string type;
 
     public:
@@ -43,9 +44,9 @@ class wave
         void setType(std::string type);
     //Generate Wave Functions
         void generate();
-        void generateSin(double size);
-        void generateSquare(double size);
-        void generateSawtooth(double size);
+        void generateSin(int size);
+        void generateSquare(int size);
+        void generateSawtooth(int size);
 };
 
 #endif // WAVE_H

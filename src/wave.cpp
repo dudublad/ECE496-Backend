@@ -13,13 +13,17 @@ wave::wave(double amplitude_in, double frequency_in,
     phase = phase_in;
     duration = duration_in;
     type = type_in;
-    values = NULL;
+    int size = ceil(duration * 44100);
+    values = new double[size];
 
     generate();
 }
 
 wave::~wave(){
-    if(values != NULL) delete[] values;
+    if(values != NULL){
+        delete[] values;
+        values = NULL;
+    }
 }
 
 //Setters
@@ -38,7 +42,8 @@ void wave::setDuration(double duration_in){
     duration = duration_in;
 }
 void wave::setType(std::string type_in){
-    if(type_in == "sin" || type_in == "square" || type_in == "saw") type = type_in;
+    if(type_in == "sin" || type_in == "square"
+            || type_in == "saw") type = type_in;
     if(type_in == "sawtooth") type = "saw";
 }
 
@@ -48,7 +53,7 @@ void wave::generate(){
     if(values != NULL) delete[] values;
 
     //TODO: fix #define so this can use fSampling
-    double size = duration * 44100;
+    int size = ceil(duration * 44100);
     values = new double[size];
 
     //Generate based on wave type
@@ -66,14 +71,14 @@ void wave::generate(){
     }
 }
 
-void wave::generateSin(double size){
+void wave::generateSin(int size){
     for(int i = 0; i < size; i++){
         //TODO: tSampling is not working here for some reason idk
         values[i] = amplitude*sin((2*M_PI*frequency*0.00002267573*i) + phase);
     }
 }
 
-void wave::generateSquare(double size){
+void wave::generateSquare(int size){
     for(int i = 0; i < size; i++){
         //TODO: tSampling is not working here for some reason idk
         double temp = sin((2*M_PI*frequency*0.00002267573*i) + phase);
@@ -81,7 +86,7 @@ void wave::generateSquare(double size){
     }
 }
 
-void wave::generateSawtooth(double size){
+void wave::generateSawtooth(int size){
     double n = 44100/frequency;
     for(int i = 0; i < size; i++){
         values[i] = 2*((amplitude*(fmod(i + n*(phase/(2*M_PI)),n)))/n
